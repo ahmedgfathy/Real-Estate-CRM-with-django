@@ -309,10 +309,10 @@ def leads_dashboard_view(request):
         'lead', 'user'
     ).order_by('-created_at')[:10]
     
-    # Hot leads
+    # Hot leads (temperature is a ForeignKey to LeadTemperature)
     hot_leads = Lead.objects.filter(
-        temperature='hot'
-    ).select_related('status').order_by('-score', '-created_at')[:5]
+        temperature__name__iexact='hot'
+    ).select_related('status', 'temperature').order_by('-score', '-created_at')[:5]
     
     # Performance metrics (mock data for now)
     avg_response_time = 4.2
@@ -339,15 +339,15 @@ def leads_dashboard_view(request):
         'percentage': 36
     }
     
-    # Temperature counts
-    hot_count = Lead.objects.filter(temperature='hot').count()
-    warm_count = Lead.objects.filter(temperature='warm').count()
-    cold_count = Lead.objects.filter(temperature='cold').count()
+    # Temperature counts (temperature is a ForeignKey)
+    hot_count = Lead.objects.filter(temperature__name__iexact='hot').count()
+    warm_count = Lead.objects.filter(temperature__name__iexact='warm').count()
+    cold_count = Lead.objects.filter(temperature__name__iexact='cold').count()
     
-    # Priority counts
-    high_priority_count = Lead.objects.filter(priority='high').count()
-    medium_priority_count = Lead.objects.filter(priority='medium').count()
-    low_priority_count = Lead.objects.filter(priority='low').count()
+    # Priority counts (priority is a ForeignKey)
+    high_priority_count = Lead.objects.filter(priority__name__iexact='high').count()
+    medium_priority_count = Lead.objects.filter(priority__name__iexact='medium').count()
+    low_priority_count = Lead.objects.filter(priority__name__iexact='low').count()
     
     # Status counts for quick filters
     statuses_with_counts = LeadStatus.objects.annotate(

@@ -80,18 +80,31 @@ WSGI_APPLICATION = 'real_estate_crm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_db_glomart_rs',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': 'ZeroCall20!@HH##1655&&',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
+import os
+
+# Use SQLite if no MySQL/MariaDB available, otherwise use MySQL
+USE_MYSQL = os.environ.get('USE_MYSQL', 'false').lower() == 'true'
+
+if USE_MYSQL:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('DB_NAME', 'django_db_glomart_rs'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'USER': os.environ.get('DB_USER', 'root'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+            },
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation

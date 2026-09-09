@@ -562,7 +562,7 @@ function showSaveConfirmation() {
 function saveAllChanges() {
     const changes = Object.values(pendingChanges);
     
-    fetch('{% url "authentication:bulk_update_field_permissions" %}', {
+    fetch('{% url "authentication:bulk_update_permissions" %}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

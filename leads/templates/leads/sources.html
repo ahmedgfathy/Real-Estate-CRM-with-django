@@ -1,0 +1,76 @@
+{% extends "app_layout.html" %}
+{% load static %}
+
+{% block title %}Lead Sources - Glomart CRM{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-diagram-3 text-primary me-2"></i>Lead Sources</h2>
+            <p class="text-muted mb-0">Manage lead sources</p>
+        </div>
+        {% if can_create %}
+        <a href="{% url 'leads:create_source' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Add Source
+        </a>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if sources %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Created By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for source in sources %}
+                        <tr>
+                            <td><strong>{{ source.name }}</strong></td>
+                            <td>{{ source.description|default:"-" }}</td>
+                            <td>
+                                {% if source.is_active %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ source.created_by|default:"-" }}</td>
+                            <td>
+                                {% if can_edit %}
+                                <button class="btn btn-sm btn-outline-primary" onclick="editSource({{ source.id }}, '{{ source.name }}', '{{ source.description }}')">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                {% endif %}
+                                {% if can_delete %}
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteSource({{ source.id }}, '{{ source.name }}')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox fs-1 text-muted"></i>
+                <p class="mt-2 text-muted">No lead sources found.</p>
+                {% if can_create %}
+                <a href="{% url 'leads:create_source' %}" class="btn btn-primary">Add First Source</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

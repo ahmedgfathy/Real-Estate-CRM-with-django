@@ -609,25 +609,21 @@ def property_import(request):
                     
                     # Create property
                     property_obj = Property.objects.create(
+                        property_id=f"IMP{datetime.now().strftime('%Y%m%d')}{imported_count + 1:04d}",
                         property_number=property_number,
-                        title=title,
+                        name=title,
                         description=description,
-                        price=price,
+                        total_price=price,
                         currency=default_currency,
                         property_type=property_type,
                         category=default_category,
                         status=default_status,
                         activity=default_activity,
                         region=region,
-                        address=row_data.get('address', ''),
-                        city=row_data.get('city', ''),
-                        bedrooms=int(row_data.get('bedrooms', 0)) if row_data.get('bedrooms', '').isdigit() else None,
+                        rooms=int(row_data.get('bedrooms', 0)) if row_data.get('bedrooms', '').isdigit() else None,
                         bathrooms=int(row_data.get('bathrooms', 0)) if row_data.get('bathrooms', '').isdigit() else None,
-                        area_sqft=float(row_data.get('area_sqft', 0)) if row_data.get('area_sqft', '').replace('.', '').isdigit() else None,
-                        features=row_data.get('features', ''),
-                        amenities=row_data.get('amenities', ''),
-                        created_by=request.user,
-                        assigned_to=request.user
+                        total_space=float(row_data.get('area_sqft', 0)) if row_data.get('area_sqft', '').replace('.', '').isdigit() else None,
+                        handler=request.user,
                     )
                     
                     imported_count += 1
